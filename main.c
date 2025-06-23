@@ -1,20 +1,15 @@
 #include <stdio.h>
+#include <stdbool.h>
 
 int main() {
     int c;
-    long blanks = 0;
-    long tabs = 0;
-    long newlines = 0;
+    bool was_previously_blank = false;
 
     while ((c = getchar()) != EOF) {
-        switch (c) {
-            case ' ': blanks++; break;
-            case '\t': tabs++; break;
-            case '\n': newlines++; break;
-            default:;
+        const bool is_blank = c == ' ';
+        if (!(is_blank & was_previously_blank)) {
+            putchar(c);
         }
+        was_previously_blank = is_blank;
     }
-    printf("blanks: %ld\n", blanks);
-    printf("tabs: %ld\n", tabs);
-    printf("newlines: %ld\n", newlines);
 }
