@@ -1,35 +1,15 @@
 #include <stdio.h>
-#include <stdbool.h>
 
-#define MAX_WORD_LEN (20)
+long pow(const long m, const long n) {
+    long out = 1;
+    for (int i = 0; i < n; i++) {
+        out *= m;
+    }
+    return out;
+}
 
 int main() {
-    int c;
-    int current_word_len = 0;
+    printf("%ld\n", pow(2, 5));
 
-    int lengths[MAX_WORD_LEN];
-    for (int i = 0; i < MAX_WORD_LEN; i++) {
-        lengths[i] = 0;
-    }
-
-    while ((c = getchar()) != EOF) {
-        const bool is_whitespace = c == ' ' || c == '\t' || c == '\n';
-
-        if (is_whitespace) {
-            if (current_word_len > 0) {
-                lengths[current_word_len]++;
-                current_word_len = 0;
-            }
-        } else {
-            current_word_len++;
-        }
-    }
-
-    for (int i = 1; i < MAX_WORD_LEN; i++) {
-        printf("%2d: ", i);
-        for (int j = 0; j < lengths[i]; j++) {
-            putchar('#');
-        }
-        putchar('\n');
-    }
+    return 0;
 }
