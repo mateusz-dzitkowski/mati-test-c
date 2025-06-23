@@ -1,24 +1,35 @@
 #include <stdio.h>
+#include <stdbool.h>
+
+#define MAX_WORD_LEN (20)
 
 int main() {
     int c;
-    long whitespace = 0;
-    long digits[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-    long others = 0;
+    int current_word_len = 0;
+
+    int lengths[MAX_WORD_LEN];
+    for (int i = 0; i < MAX_WORD_LEN; i++) {
+        lengths[i] = 0;
+    }
 
     while ((c = getchar()) != EOF) {
-        if (c >= '0' && c <= '9') {
-            digits[c - '0']++;
-        } else if (c == ' ' || c == '\t' || c == '\n') {
-            whitespace++;
+        const bool is_whitespace = c == ' ' || c == '\t' || c == '\n';
+
+        if (is_whitespace) {
+            if (current_word_len > 0) {
+                lengths[current_word_len]++;
+                current_word_len = 0;
+            }
         } else {
-            others++;
+            current_word_len++;
         }
     }
 
-    printf("whitespace: %ld\n", whitespace);
-    for (int i = 0; i <= 9; i++) {
-        printf("digit %d: %ld\n", i, digits[i]);
+    for (int i = 1; i < MAX_WORD_LEN; i++) {
+        printf("%2d: ", i);
+        for (int j = 0; j < lengths[i]; j++) {
+            putchar('#');
+        }
+        putchar('\n');
     }
-    printf("others: %ld\n", others);
 }
