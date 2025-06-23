@@ -1,15 +1,14 @@
 #include <stdio.h>
-#include <stdbool.h>
 
 int main() {
     int c;
-    bool was_previously_blank = false;
 
     while ((c = getchar()) != EOF) {
-        const bool is_blank = c == ' ';
-        if (!(is_blank & was_previously_blank)) {
-            putchar(c);
+        switch (c) {
+            case '\t': putchar('\\'); putchar('t'); break;
+            case '\b': putchar('\\'); putchar('b'); break;
+            case '\\': putchar('\\'); putchar('\\'); break;
+            default: putchar(c); break;
         }
-        was_previously_blank = is_blank;
     }
 }
