@@ -6,20 +6,12 @@ void copy(const char from[], char to[]);
 
 int main() {
     int len;
-    int max;
     char line[MAX_LINE];
-    char longest[MAX_LINE];
 
-    max = 0;
     while ((len = get_line(line)) > 0) {
-        if (len > max) {
-            max = len;
-            copy(line, longest);
+        if (len > 80) {
+            printf("%s", line);
         }
-    }
-
-    if (max > 0) {
-        printf("%s", longest);
     }
 
     return 0;
