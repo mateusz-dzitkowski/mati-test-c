@@ -5,4 +5,5 @@ set(CMAKE_C_STANDARD 11)
 
 add_executable(mati_test_c
         main.c
-        detab.c)
+        detab.c
+        decomment.c)
