@@ -1,40 +1,59 @@
+#include <math.h>
+#include <stdlib.h>
 #include <stdio.h>
-#define MAX_LINE 1000
+#include <string.h>
 
-int get_line(char line[]);
-void copy(const char from[], char to[]);
+char* inet_ntoa(const unsigned int ip) {
+    const unsigned char octet_1 = ip >> 24 & 255;
+    const unsigned char octet_2 = ip >> 16 & 255;
+    const unsigned char octet_3 = ip >> 8 & 255;
+    const unsigned char octet_4 = ip & 255;
+
+    char *ret = malloc(15*sizeof(char));
+    if (ret == NULL) {
+        return NULL;
+    }
+
+    sprintf(ret, "%d.%d.%d.%d",  octet_1, octet_2, octet_3, octet_4);
+    return ret;
+}
+
+unsigned int inet_aton(const char *ip) {
+    if (ip == NULL) {
+        return 0;
+    }
+
+    char *ip_copy = malloc(15*sizeof(char));
+    for (int i = 0; i < 15 && ip[i] != '\0'; i++) {
+        ip_copy[i] = ip[i];
+    }
+
+    unsigned int ret = 0;
+    for (int i = 3; i >= 0; i--) {
+        const char *octet = strsep(&ip_copy, ".");
+        char *err = 0;
+        if (!octet) {
+            return 0;
+        }
+        const long n = strtol(octet, &err, 10);
+        if (*err != '\0') {
+            return 0;
+        }
+        ret += pow(256, i) * n;
+    }
+
+    free(ip_copy);
+    return ret;
+}
 
 int main() {
-    int len;
-    char line[MAX_LINE];
+    const unsigned int ip_number = 123456789;
+    char *ip_string = inet_ntoa(ip_number);
+    printf("%s\n", ip_string);
 
-    while ((len = get_line(line)) > 0) {
-        if (len > 80) {
-            printf("%s", line);
-        }
-    }
+    const unsigned int ip_number_back = inet_aton(ip_string);
+    printf("%d\n", ip_number_back);
 
+    free(ip_string);
     return 0;
-}
-
-int get_line(char line[]) {
-    int c = 0, i;
-
-    for (i = 0; i < MAX_LINE && (c = getchar()) != EOF && c != '\n'; i++) {
-        line[i] = c;
-    }
-    if (c == '\n') {
-        line[i] = c;
-        i++;
-    }
-    line[i] = '\0';
-
-    return i;
-}
-
-void copy(const char from[], char to[]) {
-    int i = 0;
-    while ((to[i] = from[i]) != '\0') {
-        i++;
-    }
 }
