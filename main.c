@@ -19,12 +19,21 @@ unsigned int set_bits(const unsigned int x, const int p, const int n, const unsi
     return x & ~mask | (y & mask_static) << shift;
 }
 
+unsigned int invert(const unsigned int x, const int p, const int n) {
+    const int bits_of_interest = x >> (p - n + 1);
+    return set_bits(x, p, n, ~bits_of_interest);
+}
+
+
 int main() {
     const unsigned int x = 992;
     const unsigned int y = 5;
     const unsigned int z = set_bits(x, 4, 3, y);
+    const unsigned int t = invert(z, 4, 3);
 
+    PRINT_BITS(x);
     PRINT_BITS(z);
+    PRINT_BITS(t);
 
     return 0;
 }
