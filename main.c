@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdbool.h>
+#include <string.h>
 
 bool contains(const char str[], const char c) {
     for (int i = 0; str[i] != '\0'; i++) {
@@ -10,24 +11,26 @@ bool contains(const char str[], const char c) {
     return false;
 }
 
-void squeeze(char s[], const char c[]) {
-    int j;
-    for (int i = j = 0; s[i] != 0; i++) {
-        if (!contains(c, s[i])) {
-            s[j] = s[i];
-            j++;
+char* any(char s1[], char s2[]) {
+    for (int i = 0; s1[i] != '\0'; i++) {
+        if (contains(s2, s1[i])) {
+            return &s1[i];
         }
     }
-    s[j] = '\0';
+    return NULL;
 }
 
 int main() {
     char word[] = "hello, world!";
-    const char blacklist[] = "hl";
 
-    squeeze(word, blacklist);
+    char* out = any(word, "rod");
+    printf("%s\n", out);
 
-    printf("%s", word);
+    char* out_std = strpbrk(word, "rod");
+    printf("%s\n", out_std);
+
+    char* null = any(word, "g");
+    printf("%s\n", null);
 
     return 0;
 }
