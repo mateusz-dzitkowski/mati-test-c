@@ -1,65 +1,81 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include <time.h>
+#include <string.h>
 
-#define N 1000000000
-
-long binsearch_slow(const long x, const long v[], const long n) {
-    long low = 0;
-    long high = n - 1;
-    long mid = 0;
-
-    while (low <= high) {
-        mid = (low + high) / 2;
-        if (x < v[mid]) {
-            high = mid - 1;
-        } else if (x > v[mid]) {
-            low = mid + 1;
-        } else {
-            return mid;
+void escape(char* s, const char* t) {
+    int i = 0;
+    int j = 0;
+    while (t[i] != '\0') {
+        switch (t[i]) {
+            case '\t':
+                s[j] = '\\';
+                j++;
+                s[j] = 't';
+                break;
+            case '\n':
+                s[j] = '\\';
+                j++;
+                s[j] = 'n';
+                break;
+            default:
+                s[j] = t[i];
+                break;
         }
+        i++;
+        j++;
     }
-    return -1;
+    s[j] = '\0';
 }
 
-long binsearch_fast(const long x, const long v[], const long n) {
-    long low = 0;
-    long high = n - 1;
-    long mid = 0;
-
-    while (low <= high) {
-        mid = (low + high) / 2;
-        if (x < v[mid]) {
-            high = mid - 1;
-        } else {
-            low = mid + 1;
+void unescape(char* s, const char* t) {
+    int i = 0;
+    int j = 0;
+    while (t[i] != '\0') {
+        switch (t[i]) {
+            case '\\':
+                i++;
+                switch (t[i]) {
+                    case 't':
+                        s[j] = '\t';
+                        break;
+                    case 'n':
+                        s[j] = '\n';
+                        break;
+                    default:
+                        s[j] = '\\';
+                        j++;
+                        s[j] = t[i];
+                        break;
+                }
+                break;
+            default:
+                s[j] = t[i];
+                break;
         }
+        i++;
+        j++;
     }
-
-    if (x == v[low - 1]) {
-        return low - 1;
-    }
-
-    return -1;
+    s[j] = '\0';
 }
 
 int main() {
-    long* v = malloc(N * sizeof(long));
-    for (long i = 0; i < N; i++) {
-        v[i] = i;
+    char *str = "Hello\tworld!\n";
+    char *str_escaped = malloc(2 * strlen(str) + 1);
+    char *str_unescaped = malloc(strlen(str) + 1);
+    if (str_escaped == NULL) {
+        return 1;
+    }
+    if (str_unescaped == NULL) {
+        return 1;
     }
 
-    const clock_t start_fast = clock();
-    const long fast = binsearch_fast(1, v, N);
-    const clock_t end_fast = clock();
+    escape(str_escaped, str);
+    unescape(str_unescaped, str_escaped);
+    printf("%s\n", str);
+    printf("%s\n", str_escaped);
+    printf("%s\n", str_unescaped);
 
-    const clock_t start_slow = clock();
-    const long slow = binsearch_slow(1, v, N);
-    const clock_t end_slow = clock();
-
-    printf("slow=%ld, fast=%ld\n", slow, fast);
-    printf("slow: %f\n", (float)(end_slow - start_slow));
-    printf("fast: %f\n", (float)(end_fast - start_fast));
-
-    free(v);
+    free(str_escaped);
+    free(str_unescaped);
+    return 0;
 }
